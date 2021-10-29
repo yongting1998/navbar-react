@@ -1,13 +1,24 @@
-import React from "react";
-import { BrowserRouter as Router, Switch, Route} from "react-router-dom";
+import React, { useState, useEffect } from "react";
+import { BrowserRouter as Router, Switch, Route } from "react-router-dom";
 import NavbarSection from "../components/navbar/NavbarSection.js";
 
 const Home = React.lazy(() => import("../views/Home.js"));
 const RouterView = () => {
+  const [tabletView, setTabletView] = useState(window.innerWidth < 1200);
+  useEffect(() => {
+    const handleResize = () => {
+      setTabletView(window.innerWidth < 1200);
+      console.log("ASD");
+    };
+    window.addEventListener("resize", handleResize);
+    return () => {
+      window.removeEventListener("resize", handleResize);
+    };
+  });
   return (
     <Router>
       <div>
-        <NavbarSection />
+        <NavbarSection tabletView={tabletView} />
         <React.Suspense fallback={<p>Loading</p>}>
           <Switch>
             <Route path="/about">
