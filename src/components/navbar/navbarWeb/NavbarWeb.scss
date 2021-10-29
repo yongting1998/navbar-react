@@ -1,10 +1,16 @@
-.web-nav{
-    padding:20px;
-    display:flex;
-    justify-content: space-between;
+.web-nav {
+  padding: 20px;
+  display: flex;
+  justify-content: space-between;
 }
-.web-nav__links{
-    a{
-        margin:10px;
-    }
+.web-nav__links {
+  a {
+    margin: 10px;
+  }
+}
+.web-nav__routes {
+  text-decoration: none;
+  &.is-active {
+    text-decoration: underline;
+  }
 }

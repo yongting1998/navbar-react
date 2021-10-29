@@ -1,5 +1,5 @@
 import React from "react";
-import { BrowserRouter as Router, Switch, Route } from "react-router-dom";
+import { BrowserRouter as Router, Switch, Route} from "react-router-dom";
 import NavbarSection from "../components/navbar/NavbarSection.js";
 
 const Home = React.lazy(() => import("../views/Home.js"));
