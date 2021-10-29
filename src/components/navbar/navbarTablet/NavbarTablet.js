@@ -1,5 +1,5 @@
 import "./NavbarTablet.scss";
-import { Link } from "react-router-dom";
+import { NavLink } from "react-router-dom";
 import logo from "../../../assets/cloudplus_logo.png";
 const NavbarMobile = () => {
   function toggleSideBar() {
@@ -22,13 +22,32 @@ const NavbarMobile = () => {
         <div className="tablet-nav__sidebar" id="sidebar-wrapper">
           <ul>
             <li>
-              <Link to="/">Home</Link>
+              <NavLink
+                exact={true}
+                activeClassName="is-active"
+                className="web-nav__routes"
+                to="/"
+              >
+                Home
+              </NavLink>
             </li>
             <li>
-              <Link to="/about">About</Link>
+              <NavLink
+                activeClassName="is-active"
+                className="web-nav__routes"
+                to="/about"
+              >
+                About
+              </NavLink>
             </li>
             <li>
-              <Link to="/users">Users</Link>
+              <NavLink
+                activeClassName="is-active"
+                className="web-nav__routes"
+                to="/users"
+              >
+                Users
+              </NavLink>
             </li>
           </ul>
         </div>
