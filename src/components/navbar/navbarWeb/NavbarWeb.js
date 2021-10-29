@@ -1,7 +1,7 @@
 import logo from "../../../assets/cloudplus_logo.png";
 import { NavLink } from "react-router-dom";
 import "./NavbarWeb.scss";
-import { NavMenuItems } from "../NavMenuItems";
+// import { NavMenuItems } from "../NavMenuItems";
 const NavbarWeb = () => {
   return (
     <nav className="web-nav">
