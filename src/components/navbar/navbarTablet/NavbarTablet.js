@@ -9,7 +9,7 @@ const NavbarMobile = () => {
   return (
     <>
       <nav className="tablet-nav">
-        <div class="table-nav__topbar">
+        <div className="table-nav__topbar">
           <img src={logo} alt="Logo" className="tablet-nav__topbar__logo" />
           <div
             className="tablet-nav__topbar__toggle-btn"
