@@ -21,22 +21,23 @@ const RouterView = () => {
     };
   });
   return (
-    <BrowserRouter>
+    <Router>
       <NavbarSection tabletView={tabletView} />
+      {/* lazy loading, i think react router already has this in <Switch> */}
       <React.Suspense fallback={<p>Loading</p>}>
         <Switch>
+          <Route exact path="/">
+            <Home />
+          </Route>
           <Route path="/about">
             <div>ABOUT</div>
           </Route>
           <Route path="/users">
             <div>Users</div>
           </Route>
-          <Route path="/">
-            <Home />
-          </Route>
         </Switch>
       </React.Suspense>
-    </BrowserRouter>
+    </Router>
   );
 };
 
