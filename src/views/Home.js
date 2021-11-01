@@ -1,6 +1,10 @@
+import SiteMapDrawing from "../components/siteMap/SiteMapDrawing";
 const Home = () => {
-    return <div>HOMME PAGEEE</div>;
-  };
-  
-  export default Home;
-  
+  return (
+    <div>
+      <SiteMapDrawing />
+    </div>
+  );
+};
+
+export default Home;
