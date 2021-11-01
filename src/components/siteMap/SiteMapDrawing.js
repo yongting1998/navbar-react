@@ -51,8 +51,8 @@ const SiteMapDrawing = () => {
   };
 
   function isStart(offsetX, offsetY) {
-    if (offsetX > startPoint.offsetX && offsetX < startPoint.offsetX + 20) {
-      if (offsetY > startPoint.offsetY < startPoint.offsetY + 20) {
+    if (offsetX >= startPoint.offsetX && offsetX <= startPoint.offsetX + 20) {
+      if (offsetY >= startPoint.offsetY && offsetY <= startPoint.offsetY + 20) {
         return true;
       }
     } else {
