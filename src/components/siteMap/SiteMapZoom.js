@@ -7,11 +7,6 @@ var click;
 
 /**The image coordinate returned by the interface is the location relative to the upper left corner of the original image*/
 const imgInfo = {
-  lableBottom: "492",
-  lableLeft: "342",
-  lableRight: "353",
-  lableTop: "470",
-  position: "03",
   src: "http://i.imgur.com/yf6d9SX.jpg",
 };
 
@@ -142,7 +137,7 @@ const SiteMapZoom = () => {
     event.stopPropagation();
     const canvas = canvasRef.current;
     const ctx = canvas.getContext("2d");
-    if (event.deltaY > 0 || click == "decrease") {
+    if (event.deltaY < 0 || click == "decrease") {
       var bigger = -1;
     } else {
       var bigger = 1;
