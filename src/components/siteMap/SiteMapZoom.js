@@ -1,14 +1,7 @@
 import React, { createRef, useEffect, useState, useRef } from "react";
 
-/**Canvas size*/
-const WIDTH = 1000;
-const HEIGHT = 500;
-var click;
 
-/**The image coordinate returned by the interface is the location relative to the upper left corner of the original image*/
-const imgInfo = {
-  src: "http://i.imgur.com/yf6d9SX.jpg",
-};
+var click;
 
 const SiteMapZoom = () => {
   const canvasRef = createRef();
@@ -23,46 +16,43 @@ const SiteMapZoom = () => {
   /**Picture node*/
   const [imgElement, setImgElement] = useState(new Image());
   /**Display image size*/
-  const [size, setSize] = useState({ width: WIDTH, height: HEIGHT });
+  const [size, setSize] = useState({ width: 0, height: 0 });
 
   const [isDrawing, setIsDrawing] = useState(false);
   const [pointsList, setPointsList] = useState([]);
   const [points, setPoints] = useState([]);
   const [startPoint, setStartPoint] = useState({});
 
-  /**Initialize image location*/
-  const initImg = () => {
+  useEffect(() => {
     /**Initializes a picture node object*/
-    const img = new Image();
-    img.onload = () => {
-      const ctx = canvasRef.current?.getContext("2d");
-      const { naturalWidth, height, naturalHeight } = img;
-      //Scaling
-      const imgScale = height / naturalHeight;
-      //Set the width of the picture
-      const width = naturalWidth * imgScale;
-      //The position of the picture relative to the horizontal and vertical center of the parent element
-      const left = WIDTH / 2 - width / 2;
-      const top = HEIGHT / 2 - height / 2;
+    const background = new Image();
+    background.src = "http://i.imgur.com/yf6d9SX.jpg";
+    background.onload = () => {
+      const canvas = canvasRef.current;
+      const width = background.naturalWidth;
+      const height = background.naturalHeight;
+      canvas.width = width;
+      canvas.height = height;
+      canvas.style.width = width+ "px";
+      canvas.style.height = height + "px";
+      canvas.style.border = "1px solid black";
 
-      canvasRef.current.style.border = "1px solid black";
-      //Draw a picture
-      ctx.drawImage(img, left, top, width, height);
-      
-      ctx.lineCap = "round";
-      ctx.strokeStyle = "black";
-      ctx.lineWidth = 5;
-
-      contextRef.current = ctx;
+      const context = canvas.getContext("2d");
+      context.drawImage(background, 0, 0);
+      //   context.scale(2, 2);
+      context.lineCap = "round";
+      context.strokeStyle = "black";
+      context.lineWidth = 5;
+      contextRef.current = context;
       contextRef.current.beginPath();
       contextRef.current.lineWidth = 3;
 
       setSize({ width, height });
-      setImgElement(img);
+      setImgElement(background);
     };
-    img.height = HEIGHT;
-    img.src = imgInfo.src;
-  };
+    //img.height = HEIGHT;
+    //img.src = imgInfo.src;
+  }, []);
 
   /**Convert browser coordinate system to canvas coordinate system*/
   const windowToCanvas = (canvas, x, y) => {
@@ -107,7 +97,7 @@ const SiteMapZoom = () => {
     //Pan picture
     const ctx = canvas.getContext("2d");
     //Empty canvas
-    ctx.clearRect(0, 0, WIDTH, HEIGHT);
+    ctx.clearRect(0, 0, size.width, size.height);
     //Draw a picture
     ctx.drawImage(imgElement, offsetX, offsetY, size.width, size.height);
 
@@ -137,7 +127,7 @@ const SiteMapZoom = () => {
     event.stopPropagation();
     const canvas = canvasRef.current;
     const ctx = canvas.getContext("2d");
-    if (event.deltaY < 0 || click == "decrease") {
+    if(event.deltaY > 0 || click == "decrease") {
       var bigger = -1;
     } else {
       var bigger = 1;
@@ -158,19 +148,14 @@ const SiteMapZoom = () => {
     const height = size.height * rate;
 
     //Empty canvas
-    ctx.clearRect(0, 0, WIDTH, HEIGHT);
+    ctx.clearRect(0, 0, size.width, size.height);
     ctx.drawImage(imgElement, offsetDis.left, offsetDis.top, width, height);
 
     setSize({ width, height });
     return false;
   };
 
-  useEffect(() => {
-    /**Initialize picture*/
-    initImg();
-    // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, []);
-
+  
   const startDrawing = ({ nativeEvent }) => {
     const { offsetX, offsetY } = nativeEvent;
     if (points.length === 0) {
@@ -204,11 +189,9 @@ const SiteMapZoom = () => {
   }
 
   return (
-    <div style={{display:"flex"}}>
+    <div style={{ display: "flex" }}>
       <canvas
         ref={canvasRef}
-        width={WIDTH}
-        height={HEIGHT}
         onWheel={handleWheelImage}
         onMouseDown={handleMouseDown}
         onDoubleClick={startDrawing}
@@ -221,7 +204,7 @@ const SiteMapZoom = () => {
           display: "flex",
           flexDirection: "column",
           width: "50px",
-          margin: 5
+          margin: 5,
         }}
       >
         <button className="" onClick={handleWheelImage}>
