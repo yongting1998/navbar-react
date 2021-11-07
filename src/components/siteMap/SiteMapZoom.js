@@ -17,7 +17,6 @@ const SiteMapZoom = () => {
   const [scaleFactor, setScaleFactor] = useState(1.0);
   const [pan, setPan] = useState({ x: 0, y: 0 });
 
-
   useEffect(() => {
     /**Initializes a picture node object*/
     const background = new Image();
@@ -82,9 +81,9 @@ const SiteMapZoom = () => {
   const handleZoom = (event) => {
     event.stopPropagation();
     if (event.deltaY > 0) {
-      setScaleFactor(scaleFactor * 1.1);
-    } else {
       setScaleFactor(scaleFactor / 1.1);
+    } else {
+      setScaleFactor(scaleFactor * 1.1);
     }
     zoomPan();
   };
@@ -142,13 +141,25 @@ const SiteMapZoom = () => {
           margin: 5,
         }}
       >
-        <button name="btn-zoomin" className=""  onClick={() => setScaleFactor(scaleFactor * 1.1)}>
+        <button
+          name="btn-zoomin"
+          className=""
+          onClick={() => setScaleFactor(scaleFactor * 1.1)}
+        >
           <span>&#43;</span>
         </button>
-        <button name="btn-zoomout" className="" onClick={() => setScaleFactor(scaleFactor / 1.1)}>
+        <button
+          name="btn-zoomout"
+          className=""
+          onClick={() => setScaleFactor(scaleFactor / 1.1)}
+        >
           <span>&#8722;</span>
         </button>
-        <button name="btn-resetZoom" className="" onClick={() => setScaleFactor(1.0)}>
+        <button
+          name="btn-resetZoom"
+          className=""
+          onClick={() => setScaleFactor(1.0)}
+        >
           <span style={{ fontSize: "14px" }}>Reset</span>
         </button>
       </div>
