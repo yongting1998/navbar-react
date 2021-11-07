@@ -8,15 +8,12 @@ const SiteMapZoom = () => {
   const [imgElement, setImgElement] = useState(new Image());
   /**Display image size*/
   const [size, setSize] = useState({ width: 0, height: 0 });
+  const [view, setView] = useState({ x: 0, y: 0, zoom: 1 });
 
   const [isDrawing, setIsDrawing] = useState(false);
   const [pointsList, setPointsList] = useState([]);
   const [points, setPoints] = useState([]);
   const [startPoint, setStartPoint] = useState({});
-
-  const [scaleFactor, setScaleFactor] = useState(1.0);
-  const [pan, setPan] = useState({ x: 0, y: 0 });
-
 
   useEffect(() => {
     /**Initializes a picture node object*/
@@ -54,16 +51,9 @@ const SiteMapZoom = () => {
     ctx.resetTransform();
     ctx.clearRect(0, 0, size.width, size.height);
     ctx.save();
-    ctx.translate(size.width / 2, size.height / 2);
-    ctx.scale(scaleFactor, scaleFactor);
-    ctx.translate(pan.x, pan.y);
-    ctx.drawImage(
-      imgElement,
-      size.width / -2,
-      size.height / -2,
-      size.width,
-      size.height
-    );
+    ctx.scale(view.zoom, view.zoom);
+    ctx.translate(-view.x, -view.y);
+    ctx.drawImage(imgElement, 0, 0);
     ctx.restore();
   };
 
@@ -71,8 +61,8 @@ const SiteMapZoom = () => {
     event.stopPropagation();
     event.preventDefault();
     if (event.buttons === 1) {
-      pan.x += event.movementX;
-      pan.y += event.movementY;
+      view.x += event.movementX;
+      view.y += event.movementY;
 
       zoomPan();
     }
@@ -81,11 +71,42 @@ const SiteMapZoom = () => {
   /**Scrolling*/
   const handleZoom = (event) => {
     event.stopPropagation();
-    if (event.deltaY > 0) {
-      setScaleFactor(scaleFactor * 1.1);
-    } else {
-      setScaleFactor(scaleFactor / 1.1);
-    }
+
+    const canvas = canvasRef.current;
+    const context = canvas.getContext("2d");
+
+    // Get mouse offset.
+    const mousex = event.clientX - canvas.offsetLeft;
+    const mousey = event.clientY - canvas.offsetTop;
+    const wheel = event.deltaY < 0 ? 1 : -1;
+
+    // Compute zoom factor.
+    const zoom = Math.exp(wheel * 0.2);
+
+    // Take into account the mouse point after zoom
+    view.x -= mousex / (view.zoom * zoom) - mousex / view.zoom;
+    view.y -= mousey / (view.zoom * zoom) - mousey / view.zoom;
+    view.zoom *= zoom;
+
+    zoomPan();
+  };
+
+  const btnZoomIn = () => {
+    view.zoom *= 1.2;
+    zoomPan();
+  };
+
+  const btnZoomOut = () => {
+    view.zoom *= 0.8;
+    zoomPan();
+  };
+
+  const btnReset = () => {
+    const canvas = canvasRef.current;
+    const ctx = canvas.getContext("2d");
+    view.zoom = 1;
+    view.x = 0;
+    view.y = 0;
     zoomPan();
   };
 
@@ -121,10 +142,6 @@ const SiteMapZoom = () => {
     }
   }
 
-  useEffect(() => {
-    zoomPan();
-  }, [scaleFactor]);
-
   return (
     <div style={{ display: "flex" }}>
       <canvas
@@ -142,13 +159,13 @@ const SiteMapZoom = () => {
           margin: 5,
         }}
       >
-        <button name="btn-zoomin" className=""  onClick={() => setScaleFactor(scaleFactor * 1.1)}>
+        <button name="btn-zoomin" className="" onClick={btnZoomIn}>
           <span>&#43;</span>
         </button>
-        <button name="btn-zoomout" className="" onClick={() => setScaleFactor(scaleFactor / 1.1)}>
+        <button name="btn-zoomout" className="" onClick={btnZoomOut}>
           <span>&#8722;</span>
         </button>
-        <button name="btn-resetZoom" className="" onClick={() => setScaleFactor(1.0)}>
+        <button name="btn-resetZoom" className="" onClick={btnReset}>
           <span style={{ fontSize: "14px" }}>Reset</span>
         </button>
       </div>
