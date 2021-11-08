@@ -8,7 +8,8 @@ const SiteMapZoom = () => {
   const [imgElement, setImgElement] = useState(new Image());
   /**Display image size*/
   const [size, setSize] = useState({ width: 0, height: 0 });
-  const [view, setView] = useState({ x: 0, y: 0, zoom: 1 });
+  const [view, setView] = useState({ x: 0.0, y: 0.0, zoom: 1.0 });
+  const [mousePos, setmousePos] = useState({ x: 400, y: 150 });
 
   const [isDrawing, setIsDrawing] = useState(false);
   const [pointsList, setPointsList] = useState([]);
@@ -78,6 +79,11 @@ const SiteMapZoom = () => {
     // Get mouse offset.
     const mousex = event.clientX - canvas.offsetLeft;
     const mousey = event.clientY - canvas.offsetTop;
+
+    // Store the mouse pos for btn zoom
+    mousePos.x = mousex;
+    mousePos.y = mousey;
+
     const wheel = event.deltaY < 0 ? 1 : -1;
 
     // Compute zoom factor.
@@ -92,11 +98,15 @@ const SiteMapZoom = () => {
   };
 
   const btnZoomIn = () => {
+    view.x -= mousePos.x / (view.zoom * 1.2) - mousePos.x / view.zoom;
+    view.y -= mousePos.y / (view.zoom * 1.2) - mousePos.y / view.zoom;
     view.zoom *= 1.2;
     zoomPan();
   };
 
   const btnZoomOut = () => {
+    view.x -= mousePos.x / (view.zoom * 0.8) - mousePos.x / view.zoom;
+    view.y -= mousePos.y / (view.zoom * 0.8) - mousePos.y / view.zoom;
     view.zoom *= 0.8;
     zoomPan();
   };
