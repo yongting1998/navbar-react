@@ -82,7 +82,7 @@ const SiteMapZoom = () => {
   }
 
   return (
-    <div style={{ display: "flex", border: "1px solid black", width:"1000px" }}>
+    <div style={{ display: "flex"}}>
       <TransformWrapper
         panning={{ disabled: selected == "draw" ? true : false }}
       >
