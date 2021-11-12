@@ -19,18 +19,16 @@ const SiteMapDrawing = () => {
 
       const context = canvas.getContext("2d");
       context.drawImage(background, 0, 0);
-      //   context.scale(2, 2);
       context.lineCap = "round";
       context.strokeStyle = "black";
       context.lineWidth = 5;
       contextRef.current = context;
-      contextRef.current.beginPath();
       contextRef.current.lineWidth = 3;
     };
   }, []);
-  const startDrawing = ({ nativeEvent }) => {
-    const { offsetX, offsetY } = nativeEvent;
+  const startDrawing = (offsetX, offsetY) => {
     if (points.length === 0) {
+      contextRef.current.beginPath();
       contextRef.current.moveTo(offsetX, offsetY);
       contextRef.current.rect(offsetX, offsetY, 20, 20);
       setStartPoint({ offsetX, offsetY });
@@ -39,6 +37,8 @@ const SiteMapDrawing = () => {
       if (isStart(offsetX, offsetY)) {
         console.log("END");
         contextRef.current.lineTo(startPoint.offsetX, startPoint.offsetY);
+        contextRef.current.fillStyle = "#8ED6FF";
+        contextRef.current.fill();
         contextRef.current.closePath();
         setPointsList([...pointsList, points]);
         setPoints([]);
@@ -49,7 +49,21 @@ const SiteMapDrawing = () => {
     }
     contextRef.current.stroke();
   };
+  const clickShape = (offsetX, offsetY) => {
+    console.log(offsetX, offsetY);
+  };
 
+  const canvasClickHandler = ({ nativeEvent }) => {
+    const { offsetX, offsetY } = nativeEvent;
+    if (isDrawing) {
+      startDrawing(offsetX, offsetY);
+    } else {
+      isClickOnShape(offsetX, offsetY);
+    }
+  };
+  const toggleIsDrawing = () => {
+    setIsDrawing((prevState) => !prevState);
+  };
   function isStart(offsetX, offsetY) {
     if (offsetX >= startPoint.offsetX && offsetX <= startPoint.offsetX + 20) {
       if (offsetY >= startPoint.offsetY && offsetY <= startPoint.offsetY + 20) {
@@ -57,6 +71,25 @@ const SiteMapDrawing = () => {
       }
     } else {
       return false;
+    }
+  }
+
+  function isClickOnShape(offsetX, offsetY) {
+    for (var i = 0; i < pointsList.length; i++) {
+      var shape = pointsList[i];
+      defineShape(shape);
+      console.log("DEFINED");
+      if (contextRef.current.isPointInPath(offsetX, offsetY)) {
+        alert("asdasdasd");
+      }
+    }
+  }
+  function defineShape(shape) {
+    var points = shape;
+    contextRef.current.beginPath();
+    contextRef.current.moveTo(points[0].offsetX, points[0].offsetY);
+    for (var i = 1; i < points.length; i++) {
+      contextRef.current.lineTo(points[i].offsetX, points[i].offsetY);
     }
   }
   //   const finishDrawing = () => {
@@ -74,8 +107,8 @@ const SiteMapDrawing = () => {
   //   };
   return (
     <>
-      <canvas onMouseDown={startDrawing} ref={canvasRef} />
-      <div />
+      <button onClick={toggleIsDrawing} />
+      <canvas onClick={canvasClickHandler} ref={canvasRef} />
     </>
   );
 };
