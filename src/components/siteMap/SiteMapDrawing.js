@@ -92,19 +92,6 @@ const SiteMapDrawing = () => {
       contextRef.current.lineTo(points[i].offsetX, points[i].offsetY);
     }
   }
-  //   const finishDrawing = () => {
-  //     contextRef.current.closePath();
-  //     setIsDrawing(false);
-  //   };
-
-  //   const draw = ({ nativeEvent }) => {
-  //     if (!isDrawing) {
-  //       return;
-  //     }
-  //     const { offsetX, offsetY } = nativeEvent;
-  //     contextRef.current.lineTo(offsetX, offsetY);
-  //     contextRef.current.stroke();
-  //   };
   return (
     <>
       <button onClick={toggleIsDrawing} />
